@@ -142,3 +142,33 @@ buttons.forEach((button) => {
 
 // Initialize display
 updateDisplay("0");
+
+// Keyboard support
+window.addEventListener("keydown", (e) => {
+  let key = e.key;
+  if (key >= "0" && key <= "9") {
+    document.querySelector(`.btn[data-digit='${key}']`).click();
+    e.preventDefault();
+  } else if (key === ".") {
+    document.querySelector(`.btn[data-action='decimal']`).click();
+    e.preventDefault();
+  } else if (key === "+" || key === "-" || key === "*" || key === "/") {
+    const opMap = {
+      "+": "add",
+      "-": "subtract",
+      "*": "multiply",
+      "/": "divide",
+    };
+    document.querySelector(`.btn[data-action='${opMap[key]}']`).click();
+    e.preventDefault();
+  } else if (key === "=" || key === "Enter") {
+    document.querySelector(`.btn[data-action='equals']`).click();
+    e.preventDefault();
+  } else if (key === "Escape" || key === "c" || key === "C") {
+    document.querySelector(`.btn[data-action='clear']`).click();
+    e.preventDefault();
+  } else if (key === "Backspace") {
+    document.querySelector(`.btn[data-action='backspace']`)?.click();
+    e.preventDefault();
+  }
+});
