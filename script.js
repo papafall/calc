@@ -136,6 +136,11 @@ buttons.forEach((button) => {
         }
         waitingForSecondOperand = true;
       }
+    } else if (action === "backspace") {
+      if (!waitingForSecondOperand && currentInput.length > 0) {
+        currentInput = currentInput.slice(0, -1);
+        updateDisplay(currentInput === "" ? "0" : currentInput);
+      }
     }
   });
 });
