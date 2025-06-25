@@ -50,6 +50,19 @@ function updateDisplay(value) {
   display.textContent = value;
 }
 
+function formatResult(result) {
+  if (typeof result === "number") {
+    // Round to 8 decimal places max, trim trailing zeros
+    let str = result.toFixed(8).replace(/\.0+$|0+$/, "");
+    // If still too long, use exponential
+    if (str.length > 12) {
+      str = result.toExponential(6);
+    }
+    return str;
+  }
+  return result;
+}
+
 // Handle button clicks
 const buttons = document.querySelectorAll(".btn");
 buttons.forEach((button) => {
@@ -87,12 +100,31 @@ buttons.forEach((button) => {
           parseFloat(currentInput)
         );
         firstOperand = typeof result === "number" ? result : firstOperand;
-        updateDisplay(result);
+        updateDisplay(formatResult(result));
       }
       operator = nextOperator;
       waitingForSecondOperand = true;
+    } else if (action === "equals") {
+      if (operator && firstOperand !== null && currentInput !== "") {
+        const result = operate(
+          operator,
+          firstOperand,
+          parseFloat(currentInput)
+        );
+        if (typeof result === "number") {
+          updateDisplay(formatResult(result));
+          firstOperand = result;
+          currentInput = "";
+        } else {
+          // Error (e.g., divide by zero)
+          updateDisplay("Nice try!");
+          firstOperand = null;
+          operator = null;
+          currentInput = "";
+        }
+        waitingForSecondOperand = true;
+      }
     }
-    // Equals and other actions will be handled later
   });
 });
 
