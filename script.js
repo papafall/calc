@@ -78,6 +78,18 @@ buttons.forEach((button) => {
         currentInput += digit;
       }
       updateDisplay(currentInput);
+    } else if (action === "decimal") {
+      if (waitingForSecondOperand) {
+        currentInput = "0.";
+        waitingForSecondOperand = false;
+      } else if (!currentInput.includes(".")) {
+        if (currentInput === "") {
+          currentInput = "0.";
+        } else {
+          currentInput += ".";
+        }
+      }
+      updateDisplay(currentInput);
     } else if (action === "clear") {
       currentInput = "";
       firstOperand = null;
