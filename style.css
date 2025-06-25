@@ -1,5 +1,6 @@
 .calculator {
-  width: 320px;
+  width: 95vw;
+  max-width: 340px;
   margin: 40px auto;
   padding: 20px;
   border-radius: 14px;
@@ -32,7 +33,7 @@
   background: #23272a;
   color: #f8fafc;
   cursor: pointer;
-  transition: background 0.2s, box-shadow 0.2s;
+  transition: background 0.2s, box-shadow 0.2s, transform 0.2s;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.18);
 }
 .btn:hover {
@@ -121,4 +122,25 @@ body {
   margin-bottom: 2px;
   letter-spacing: 1px;
   opacity: 0.85;
+}
+@media (max-width: 500px) {
+  .calculator {
+    max-width: 98vw;
+    padding: 10px;
+  }
+  .display {
+    font-size: 1.3em;
+    padding: 12px 6px;
+  }
+  .operation-display {
+    font-size: 0.9em;
+    padding: 2px 6px 0 6px;
+  }
+  .btn {
+    font-size: 1em;
+    padding: 12px 0;
+  }
+  .buttons {
+    gap: 7px;
+  }
 }
