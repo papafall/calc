@@ -180,6 +180,16 @@ buttons.forEach((button) => {
         updateDisplay(formatResult(parseFloat(currentInput)));
       }
       updateOperationDisplay();
+    } else if (action === "plusminus") {
+      if (!waitingForSecondOperand && currentInput !== "") {
+        if (currentInput.startsWith("-")) {
+          currentInput = currentInput.slice(1);
+        } else {
+          currentInput = "-" + currentInput;
+        }
+        updateDisplay(currentInput);
+        updateOperationDisplay();
+      }
     }
   });
 });

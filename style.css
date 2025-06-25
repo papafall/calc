@@ -93,6 +93,18 @@
   background: #67e8f9;
   color: #23272a;
 }
+.btn[data-action="plusminus"] {
+  background: #f59e42;
+  color: #fff;
+  box-shadow: 0 2px 10px rgba(245, 158, 66, 0.18);
+}
+.btn[data-action="plusminus"]:hover {
+  background: #b45309;
+}
+.btn[data-action="plusminus"].pressed {
+  background: #fde68a;
+  color: #23272a;
+}
 body {
   background: #101214;
   color: #f8fafc;
