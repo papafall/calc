@@ -41,6 +41,10 @@ function operate(operator, a, b) {
 let currentInput = "";
 const display = document.getElementById("display");
 
+let firstOperand = null;
+let operator = null;
+let waitingForSecondOperand = false;
+
 // Update display function
 function updateDisplay(value) {
   display.textContent = value;
@@ -54,17 +58,41 @@ buttons.forEach((button) => {
     const action = button.getAttribute("data-action");
 
     if (digit !== null) {
-      // Append digit to current input
-      if (currentInput.length < 12) {
-        // limit display length
+      if (waitingForSecondOperand) {
+        currentInput = digit;
+        waitingForSecondOperand = false;
+      } else if (currentInput.length < 12) {
         currentInput += digit;
-        updateDisplay(currentInput);
       }
+      updateDisplay(currentInput);
     } else if (action === "clear") {
       currentInput = "";
+      firstOperand = null;
+      operator = null;
+      waitingForSecondOperand = false;
       updateDisplay("0");
+    } else if (["add", "subtract", "multiply", "divide"].includes(action)) {
+      const opMap = { add: "+", subtract: "-", multiply: "*", divide: "/" };
+      const nextOperator = opMap[action];
+      if (operator && waitingForSecondOperand) {
+        operator = nextOperator;
+        return;
+      }
+      if (firstOperand === null && currentInput !== "") {
+        firstOperand = parseFloat(currentInput);
+      } else if (operator) {
+        const result = operate(
+          operator,
+          firstOperand,
+          parseFloat(currentInput)
+        );
+        firstOperand = typeof result === "number" ? result : firstOperand;
+        updateDisplay(result);
+      }
+      operator = nextOperator;
+      waitingForSecondOperand = true;
     }
-    // Operators and other actions will be handled later
+    // Equals and other actions will be handled later
   });
 });
 
