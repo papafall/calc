@@ -134,7 +134,7 @@ buttons.forEach((button) => {
           currentInput = "";
         } else {
           // Error (e.g., divide by zero)
-          updateDisplay("Nice try!");
+          updateDisplay(getRandomSnark());
           firstOperand = null;
           operator = null;
           currentInput = "";
@@ -182,3 +182,19 @@ window.addEventListener("keydown", (e) => {
     e.preventDefault();
   }
 });
+
+// Snarky error messages for divide by zero
+const snarkyMessages = [
+  "Nice try!",
+  "You can't do that!",
+  "Divide by zero? Bold move.",
+  "Nope, not today!",
+  "Infinity isn't on the menu.",
+  "Zero says no.",
+  "Math error: Try again!",
+  "This isn't quantum physics!",
+];
+
+function getRandomSnark() {
+  return snarkyMessages[Math.floor(Math.random() * snarkyMessages.length)];
+}
