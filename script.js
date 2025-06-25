@@ -77,6 +77,11 @@ buttons.forEach((button) => {
       } else if (currentInput.length < 12) {
         currentInput += digit;
       }
+      // Trim leading zeros unless input is '0.'
+      if (!currentInput.startsWith("0.") && currentInput.length > 1) {
+        currentInput = currentInput.replace(/^0+/, "");
+        if (currentInput === "") currentInput = "0";
+      }
       updateDisplay(currentInput);
     } else if (action === "decimal") {
       if (waitingForSecondOperand) {
