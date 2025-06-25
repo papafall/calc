@@ -151,17 +151,22 @@ buttons.forEach((button) => {
         );
         if (typeof result === "number") {
           updateDisplay(formatResult(result));
+          operationDisplay.textContent = `${formatResult(
+            firstOperand
+          )} ${operator} ${currentInput} = ${formatResult(result)}`;
           firstOperand = result;
           currentInput = "";
         } else {
           // Error (e.g., divide by zero)
           updateDisplay(getRandomSnark());
+          operationDisplay.textContent = `${formatResult(
+            firstOperand
+          )} ${operator} ${currentInput} = Error`;
           firstOperand = null;
           operator = null;
           currentInput = "";
         }
         waitingForSecondOperand = true;
-        updateOperationDisplay();
       }
     } else if (action === "backspace") {
       if (!waitingForSecondOperand && currentInput.length > 0) {
