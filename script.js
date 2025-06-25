@@ -40,6 +40,7 @@ function operate(operator, a, b) {
 // Calculator state
 let currentInput = "";
 const display = document.getElementById("display");
+const operationDisplay = document.getElementById("operation-display");
 
 let firstOperand = null;
 let operator = null;
@@ -63,6 +64,22 @@ function formatResult(result) {
   return result;
 }
 
+function updateOperationDisplay() {
+  if (firstOperand !== null && operator) {
+    if (!waitingForSecondOperand && currentInput !== "") {
+      operationDisplay.textContent = `${formatResult(
+        firstOperand
+      )} ${operator} ${currentInput}`;
+    } else {
+      operationDisplay.textContent = `${formatResult(
+        firstOperand
+      )} ${operator}`;
+    }
+  } else {
+    operationDisplay.textContent = "";
+  }
+}
+
 // Handle button clicks
 const buttons = document.querySelectorAll(".btn");
 buttons.forEach((button) => {
@@ -83,6 +100,7 @@ buttons.forEach((button) => {
         if (currentInput === "") currentInput = "0";
       }
       updateDisplay(currentInput);
+      updateOperationDisplay();
     } else if (action === "decimal") {
       if (waitingForSecondOperand) {
         currentInput = "0.";
@@ -95,12 +113,14 @@ buttons.forEach((button) => {
         }
       }
       updateDisplay(currentInput);
+      updateOperationDisplay();
     } else if (action === "clear") {
       currentInput = "";
       firstOperand = null;
       operator = null;
       waitingForSecondOperand = false;
       updateDisplay("0");
+      updateOperationDisplay();
     } else if (["add", "subtract", "multiply", "divide"].includes(action)) {
       const opMap = { add: "+", subtract: "-", multiply: "*", divide: "/" };
       const nextOperator = opMap[action];
@@ -121,6 +141,7 @@ buttons.forEach((button) => {
       }
       operator = nextOperator;
       waitingForSecondOperand = true;
+      updateOperationDisplay();
     } else if (action === "equals") {
       if (operator && firstOperand !== null && currentInput !== "") {
         const result = operate(
@@ -140,27 +161,45 @@ buttons.forEach((button) => {
           currentInput = "";
         }
         waitingForSecondOperand = true;
+        updateOperationDisplay();
       }
     } else if (action === "backspace") {
       if (!waitingForSecondOperand && currentInput.length > 0) {
         currentInput = currentInput.slice(0, -1);
         updateDisplay(currentInput === "" ? "0" : currentInput);
       }
+      updateOperationDisplay();
+    } else if (action === "percent") {
+      if (!waitingForSecondOperand && currentInput !== "") {
+        currentInput = (parseFloat(currentInput) / 100).toString();
+        updateDisplay(formatResult(parseFloat(currentInput)));
+      }
+      updateOperationDisplay();
     }
   });
 });
 
 // Initialize display
 updateDisplay("0");
+updateOperationDisplay();
+
+function pressButton(selector) {
+  const btn = document.querySelector(selector);
+  if (btn) {
+    btn.classList.add("pressed");
+    setTimeout(() => btn.classList.remove("pressed"), 120);
+    btn.click();
+  }
+}
 
 // Keyboard support
 window.addEventListener("keydown", (e) => {
   let key = e.key;
   if (key >= "0" && key <= "9") {
-    document.querySelector(`.btn[data-digit='${key}']`).click();
+    pressButton(`.btn[data-digit='${key}']`);
     e.preventDefault();
   } else if (key === ".") {
-    document.querySelector(`.btn[data-action='decimal']`).click();
+    pressButton(`.btn[data-action='decimal']`);
     e.preventDefault();
   } else if (key === "+" || key === "-" || key === "*" || key === "/") {
     const opMap = {
@@ -169,16 +208,16 @@ window.addEventListener("keydown", (e) => {
       "*": "multiply",
       "/": "divide",
     };
-    document.querySelector(`.btn[data-action='${opMap[key]}']`).click();
+    pressButton(`.btn[data-action='${opMap[key]}']`);
     e.preventDefault();
   } else if (key === "=" || key === "Enter") {
-    document.querySelector(`.btn[data-action='equals']`).click();
+    pressButton(`.btn[data-action='equals']`);
     e.preventDefault();
   } else if (key === "Escape" || key === "c" || key === "C") {
-    document.querySelector(`.btn[data-action='clear']`).click();
+    pressButton(`.btn[data-action='clear']`);
     e.preventDefault();
   } else if (key === "Backspace") {
-    document.querySelector(`.btn[data-action='backspace']`)?.click();
+    pressButton(`.btn[data-action='backspace']`);
     e.preventDefault();
   }
 });
